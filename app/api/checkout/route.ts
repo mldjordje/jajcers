@@ -31,9 +31,6 @@ export async function POST(request: Request) {
   if (!body.firstName || !body.lastName || !body.email || !body.phone || !body.address || !body.cartItems?.length) {
     return NextResponse.json({ message: 'Missing checkout fields.' }, { status: 400 });
   }
-  if (!body.customerUserId || body.customerUserId <= 0) {
-    return NextResponse.json({ message: 'Login je obavezan za narucivanje.' }, { status: 401 });
-  }
 
   const formData = new URLSearchParams();
   formData.set('first_name', body.firstName);
@@ -44,7 +41,7 @@ export async function POST(request: Request) {
   formData.set('city', body.city || 'Nis');
   formData.set('note', body.note || '');
   formData.set('cart_json', JSON.stringify(body.cartItems));
-  if (body.customerUserId) {
+  if (body.customerUserId && body.customerUserId > 0) {
     formData.set('customer_user_id', String(body.customerUserId));
   }
   if (body.couponCode) {

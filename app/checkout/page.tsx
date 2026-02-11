@@ -38,6 +38,7 @@ export default function CheckoutPage() {
   const [orderSuccess, setOrderSuccess] = useState<number | null>(null);
   const [orderMessage, setOrderMessage] = useState('');
   const [customer, setCustomer] = useState<SessionUser | null>(null);
+  const [guestMode, setGuestMode] = useState(false);
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
 
   const [firstName, setFirstName] = useState('');
@@ -54,14 +55,12 @@ export default function CheckoutPage() {
       try {
         const meResponse = await fetch('/api/customer/me', { cache: 'no-store' });
         const mePayload = (await meResponse.json()) as { user: SessionUser | null };
-        if (!mePayload.user) {
-          window.location.href = '/login?next=/checkout';
-          return;
+        if (mePayload.user) {
+          setCustomer(mePayload.user);
+          setFirstName(mePayload.user.firstname ?? '');
+          setLastName(mePayload.user.lastname ?? '');
+          setEmail(mePayload.user.email ?? '');
         }
-        setCustomer(mePayload.user);
-        setFirstName(mePayload.user.firstname ?? '');
-        setLastName(mePayload.user.lastname ?? '');
-        setEmail(mePayload.user.email ?? '');
 
         const settingsResponse = await fetch('/api/public/settings', { cache: 'no-store' });
         const settingsPayload = (await settingsResponse.json()) as {
@@ -69,8 +68,7 @@ export default function CheckoutPage() {
         };
         setSettings((prev) => ({ ...prev, ...(settingsPayload.settings ?? {}) }));
       } catch {
-        window.location.href = '/login?next=/checkout';
-        return;
+        setCustomer(null);
       }
 
       const storedCart = getCartEntries();
@@ -116,8 +114,7 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customer) {
-      window.location.href = '/login?next=/checkout';
+    if (!customer && !guestMode) {
       return;
     }
 
@@ -130,7 +127,7 @@ export default function CheckoutPage() {
       address,
       city,
       note,
-      customerUserId: customer.id,
+      customerUserId: customer?.id,
       cartItems: cartItems.map(({ product_id, quantity }) => ({ product_id, quantity })),
     };
 
@@ -173,7 +170,49 @@ export default function CheckoutPage() {
 
   if (loading) return <div className="container pt-100 pb-100 text-center">Ucitavanje...</div>;
 
-  if (!customer) return <div className="container pt-100 pb-100 text-center">Preusmeravanje na prijavu...</div>;
+  if (!customer && !guestMode) {
+    return (
+      <div className="container pt-100 pb-100">
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <div className="section-title-area text-center">
+              <h2>Pre porucivanja izaberi opciju</h2>
+              <p>Ako imas nalog prijavi se, ili nastavi bez logina :(</p>
+            </div>
+            <div className="row mt-30">
+              <div className="col-md-4 mb-20">
+                <button
+                  type="button"
+                  className="theme-btn-1 btn btn-effect-1 w-100"
+                  onClick={() => (window.location.href = '/login?next=/checkout')}
+                >
+                  Prijava
+                </button>
+              </div>
+              <div className="col-md-4 mb-20">
+                <button
+                  type="button"
+                  className="theme-btn-2 btn btn-effect-2 w-100"
+                  onClick={() => (window.location.href = '/register')}
+                >
+                  Registracija
+                </button>
+              </div>
+              <div className="col-md-4 mb-20">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary w-100"
+                  onClick={() => setGuestMode(true)}
+                >
+                  Nastavi bez logina :(
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="ltn__checkout-area mb-105 pt-80">
