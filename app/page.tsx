@@ -337,20 +337,20 @@ export default async function Home() {
                     <div className="col-lg-12">
                         <div className="ltn__blog-item ltn__blog-item-3">
                             <div className="ltn__blog-img">
-                                <Link href="#"><img src="/img/blog/3.jpg" alt="#" /></Link>
+                                <Link href="/blog/kontrola-salmonele-male-farme"><img src="/img/blog/3.jpg" alt="Kontrola salmonele" /></Link>
                             </div>
                             <div className="ltn__blog-brief">
                                 <div className="ltn__blog-meta">
                                     <ul>
                                         <li className="ltn__blog-author">
-                                            <Link href="#"><i className="far fa-user"></i>by: Danilo</Link>
+                                            <Link href="/blog/kontrola-salmonele-male-farme"><i className="far fa-user"></i>by: Danilo</Link>
                                         </li>
                                         <li className="ltn__blog-tags">
-                                            <Link href="#"><i className="fas fa-tags"></i>Zanimljivosti</Link>
+                                            <Link href="/blog"><i className="fas fa-tags"></i>Bezbednost</Link>
                                         </li>
                                     </ul>
                                 </div>
-                                <h3 className="ltn__blog-title"><Link href="#">Zašto su domaća jaja bolja od industrijskih?</Link></h3>
+                                <h3 className="ltn__blog-title"><Link href="/blog/kontrola-salmonele-male-farme">Kako izgleda dobra praksa kontrole salmonele kod malih farmi?</Link></h3>
                                 <div className="ltn__blog-meta-btn">
                                     <div className="ltn__blog-meta">
                                         <ul>
@@ -358,7 +358,7 @@ export default async function Home() {
                                         </ul>
                                     </div>
                                     <div className="ltn__blog-btn">
-                                        <Link href="#">Pročitaj više</Link>
+                                        <Link href="/blog/domaca-jaja-vakcinacija-kokosaka">Procitaj vise</Link>
                                     </div>
                                 </div>
                             </div>
@@ -368,20 +368,20 @@ export default async function Home() {
                      <div className="col-lg-12">
                         <div className="ltn__blog-item ltn__blog-item-3">
                             <div className="ltn__blog-img">
-                                <Link href="#"><img src="/img/blog/4.jpg" alt="#" /></Link>
+                                <Link href="/blog/domaca-jaja-vakcinacija-kokosaka"><img src="/img/blog/4.jpg" alt="Vakcinacija kokosaka" /></Link>
                             </div>
                             <div className="ltn__blog-brief">
                                 <div className="ltn__blog-meta">
                                     <ul>
                                         <li className="ltn__blog-author">
-                                            <Link href="#"><i className="far fa-user"></i>by: Ivan</Link>
+                                            <Link href="/blog/domaca-jaja-vakcinacija-kokosaka"><i className="far fa-user"></i>by: Danilo</Link>
                                         </li>
                                         <li className="ltn__blog-tags">
-                                            <Link href="#"><i className="fas fa-tags"></i>Nutricija</Link>
+                                            <Link href="/blog"><i className="fas fa-tags"></i>Veterina</Link>
                                         </li>
                                     </ul>
                                 </div>
-                                <h3 className="ltn__blog-title"><Link href="#">Koliko jaja je zdravo pojesti dnevno?</Link></h3>
+                                <h3 className="ltn__blog-title"><Link href="/blog/domaca-jaja-vakcinacija-kokosaka">Da li su domaca jaja bezbedna ako su kokoske vakcinisane?</Link></h3>
                                 <div className="ltn__blog-meta-btn">
                                     <div className="ltn__blog-meta">
                                         <ul>
@@ -389,7 +389,7 @@ export default async function Home() {
                                         </ul>
                                     </div>
                                     <div className="ltn__blog-btn">
-                                        <Link href="#">Pročitaj više</Link>
+                                        <Link href="/blog/zasto-kupovati-direktno-od-proizvodjaca">Procitaj vise</Link>
                                     </div>
                                 </div>
                             </div>
@@ -399,20 +399,20 @@ export default async function Home() {
                      <div className="col-lg-12">
                         <div className="ltn__blog-item ltn__blog-item-3">
                             <div className="ltn__blog-img">
-                                <Link href="#"><img src="/img/blog/5.jpg" alt="#" /></Link>
+                                <Link href="/blog/zasto-kupovati-direktno-od-proizvodjaca"><img src="/img/blog/5.jpg" alt="Direktna kupovina" /></Link>
                             </div>
                             <div className="ltn__blog-brief">
                                 <div className="ltn__blog-meta">
                                     <ul>
                                         <li className="ltn__blog-author">
-                                            <Link href="#"><i className="far fa-user"></i>by: Danijela</Link>
+                                            <Link href="/blog/zasto-kupovati-direktno-od-proizvodjaca"><i className="far fa-user"></i>by: Danilo</Link>
                                         </li>
                                         <li className="ltn__blog-tags">
-                                            <Link href="#"><i className="fas fa-tags"></i>Recepti</Link>
+                                            <Link href="/blog"><i className="fas fa-tags"></i>Kupovina i dostava</Link>
                                         </li>
                                     </ul>
                                 </div>
-                                <h3 className="ltn__blog-title"><Link href="#">Najbolji recepti sa domaćim jajima</Link></h3>
+                                <h3 className="ltn__blog-title"><Link href="/blog/zasto-kupovati-direktno-od-proizvodjaca">Zasto je bolje kupovati jaja direktno od proizvodjaca?</Link></h3>
                                 <div className="ltn__blog-meta-btn">
                                     <div className="ltn__blog-meta">
                                         <ul>
@@ -420,7 +420,7 @@ export default async function Home() {
                                         </ul>
                                     </div>
                                     <div className="ltn__blog-btn">
-                                        <Link href="#">Pročitaj više</Link>
+                                        <Link href="/blog/kontrola-salmonele-male-farme">Procitaj vise</Link>
                                     </div>
                                 </div>
                             </div>
@@ -492,3 +492,4 @@ export default async function Home() {
     </>
   );
 }
+
