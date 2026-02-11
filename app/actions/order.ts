@@ -39,6 +39,24 @@ interface OrdersResponse {
   orders: OrderRow[];
 }
 
+interface DeliveryRouteResponse {
+  status: string;
+  orders?: OrderRow[];
+}
+
+interface CreateOrderPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: 'Nis' | 'Beograd';
+  note?: string;
+  status?: string;
+  source?: string;
+  items: Array<{ product_id: number; quantity: number; price: number }>;
+}
+
 export async function getOrder(orderId: number, email: string): Promise<OrderWithItems | null> {
   try {
     const query = `order_id=${encodeURIComponent(String(orderId))}&email=${encodeURIComponent(email)}`;
@@ -101,5 +119,74 @@ export async function updateOrderStatus(orderId: number, status: string) {
   } catch (error) {
     console.error('updateOrderStatus failed:', error);
     return { success: false, error: 'Update request failed.' };
+  }
+}
+
+export async function getDeliveryRoute(city: 'Nis' | 'Beograd', date: string): Promise<OrderRow[]> {
+  try {
+    const query = `city=${encodeURIComponent(city)}&date=${encodeURIComponent(date)}`;
+    const response = await fetchPhpApiJson<DeliveryRouteResponse>(`adminDeliveryRoutes.php?${query}`);
+    return response.status === 'success' ? response.orders ?? [] : [];
+  } catch (error) {
+    console.error('getDeliveryRoute failed:', error);
+    return [];
+  }
+}
+
+export async function saveDeliveryRouteOrder(
+  city: 'Nis' | 'Beograd',
+  orderIds: number[],
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    const body = new URLSearchParams();
+    body.set('city', city);
+    body.set('order_ids', JSON.stringify(orderIds));
+
+    const response = await fetch(buildPhpApiUrl('adminDeliveryRouteOrder.php'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+      cache: 'no-store',
+    });
+    const payload = (await response.json()) as { status?: string; message?: string };
+    if (!response.ok || payload.status !== 'success') {
+      return { success: false, message: payload.message || 'Snimanje nije uspelo.' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('saveDeliveryRouteOrder failed:', error);
+    return { success: false, message: 'Servis nije dostupan.' };
+  }
+}
+
+export async function createManualOrder(input: CreateOrderPayload): Promise<{ success: boolean; message?: string }> {
+  try {
+    const body = new URLSearchParams();
+    body.set('first_name', input.first_name);
+    body.set('last_name', input.last_name);
+    body.set('email', input.email);
+    body.set('phone', input.phone);
+    body.set('address', input.address);
+    body.set('city', input.city);
+    body.set('note', input.note || '');
+    body.set('status', input.status || 'pending');
+    body.set('source', input.source || 'manual');
+    body.set('items', JSON.stringify(input.items));
+
+    const response = await fetch(buildPhpApiUrl('adminCreateOrder.php'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+      cache: 'no-store',
+    });
+    const payload = (await response.json()) as { status?: string; message?: string };
+
+    if (!response.ok || payload.status !== 'success') {
+      return { success: false, message: payload.message || 'Kreiranje porudzbine nije uspelo.' };
+    }
+    return { success: true, message: payload.message };
+  } catch (error) {
+    console.error('createManualOrder failed:', error);
+    return { success: false, message: 'Servis nije dostupan.' };
   }
 }

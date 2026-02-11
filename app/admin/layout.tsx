@@ -27,6 +27,8 @@ import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
+import RouteRoundedIcon from '@mui/icons-material/RouteRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -57,8 +59,11 @@ const theme = createTheme({
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: <DashboardRoundedIcon /> },
   { href: '/admin/orders', label: 'Porudzbine', icon: <LocalShippingRoundedIcon /> },
+  { href: '/admin/orders/new', label: 'Nova porudzbina', icon: <LocalShippingRoundedIcon /> },
+  { href: '/admin/routes', label: 'Rute dostave', icon: <RouteRoundedIcon /> },
   { href: '/admin/products', label: 'Proizvodi', icon: <Inventory2RoundedIcon /> },
   { href: '/admin/users', label: 'Korisnici', icon: <PeopleAltRoundedIcon /> },
+  { href: '/admin/settings', label: 'Podesavanja', icon: <SettingsRoundedIcon /> },
 ] as const;
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -68,8 +73,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const activeLabel = useMemo(() => {
     if (pathname.startsWith('/admin/orders')) return 'Porudzbine';
+    if (pathname.startsWith('/admin/routes')) return 'Rute dostave';
     if (pathname.startsWith('/admin/products')) return 'Proizvodi';
     if (pathname.startsWith('/admin/users')) return 'Korisnici';
+    if (pathname.startsWith('/admin/settings')) return 'Podesavanja';
     return 'Dashboard';
   }, [pathname]);
 

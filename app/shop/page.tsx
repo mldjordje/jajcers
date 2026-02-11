@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { fetchPhpApiJson } from '@/lib/php-api';
+import AddToCartButton from '@/components/AddToCartButton';
+import { resolveProductImage } from '@/lib/product-image';
 
 interface Product {
   id: number;
@@ -10,7 +12,10 @@ interface Product {
 
 async function getProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php');
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php', {
+      cache: 'force-cache',
+      next: { revalidate: 300 },
+    });
     return response.status === 'success' ? response.products : [];
   } catch {
     return [];
@@ -35,7 +40,7 @@ export default async function Shop() {
                                         <div className="ltn__product-item ltn__product-item-3 text-center">
                                             <div className="product-img">
                                                 <Link href={`/product/${product.id}`}>
-                                                    <img src={product.main_image} alt={product.name} />
+                                                    <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
                                                 </Link>
                                                 <div className="product-hover-action">
                                                     <ul>
@@ -45,9 +50,7 @@ export default async function Shop() {
                                                             </Link>
                                                         </li>
                                                         <li>
-                                                            <Link href={`/product/${product.id}`} title="Add to Cart">
-                                                                <i className="fas fa-shopping-cart"></i>
-                                                            </Link>
+                                                            <AddToCartButton productId={product.id} productName={product.name} className="theme-btn-1 btn btn-effect-1 btn-sm" />
                                                         </li>
                                                     </ul>
                                                 </div>

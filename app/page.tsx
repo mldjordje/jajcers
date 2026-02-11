@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { fetchPhpApiJson } from '@/lib/php-api';
+import AddToCartButton from '@/components/AddToCartButton';
+import PwaInstallButton from '@/components/PwaInstallButton';
+import { resolveProductImage } from '@/lib/product-image';
 
 // Define types for our data
 interface Product {
@@ -19,7 +22,10 @@ interface TopProduct {
 
 async function getProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php');
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php', {
+      cache: 'force-cache',
+      next: { revalidate: 300 },
+    });
     return response.status === 'success' ? response.products : [];
   } catch (error) {
     console.error('Products API error:', error);
@@ -29,7 +35,10 @@ async function getProducts() {
 
 async function getTopProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: TopProduct[] }>('topProducts.php');
+    const response = await fetchPhpApiJson<{ status: string; products: TopProduct[] }>('topProducts.php', {
+      cache: 'force-cache',
+      next: { revalidate: 300 },
+    });
     return response.status === 'success' ? response.products : [];
   } catch (error) {
     console.error('Top products API error:', error);
@@ -65,6 +74,7 @@ export default async function Home() {
                                             </div>
                                             <div className="btn-wrapper animated">
                                                 <Link href="/shop" className="theme-btn-1 btn btn-effect-1 text-uppercase">Naruči jaja</Link>
+                                                <PwaInstallButton />
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +139,7 @@ export default async function Home() {
                                     <div className="ltn__product-item ltn__product-item-3 text-center">
                                         <div className="product-img">
                                             <Link href={`/product/${product.id}`}>
-                                                <img src={product.main_image} alt={product.name} />
+                                                <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
                                             </Link>
                                             <div className="product-hover-action">
                                                 <ul>
@@ -139,9 +149,7 @@ export default async function Home() {
                                                         </Link>
                                                     </li>
                                                     <li>
-                                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                                            <i className="fas fa-shopping-cart"></i>
-                                                        </a>
+                                                        <AddToCartButton productId={product.id} productName={product.name} className="theme-btn-1 btn btn-effect-1 btn-sm" />
                                                     </li>
                                                     <li>
                                                         <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
@@ -267,7 +275,7 @@ export default async function Home() {
                                 <div className="ltn__category-item-img">
                                     <Link href={`/product/${prod.id}`}>
                                         {prod.main_image ? (
-                                            <img style={{ width: "200px", height: "200px", objectFit: "contain" }} src={prod.main_image} alt="Product Image" />
+                                            <img style={{ width: "200px", height: "200px", objectFit: "contain" }} src={resolveProductImage(prod.name, prod.main_image)} alt="Product Image" />
                                         ) : (
                                             <img src="/img/no-image.jpg" alt="No Image" />
                                         )}

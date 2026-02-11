@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getProductsByIds } from '@/app/actions/product';
+import { getCartEntries, removeCartItem, updateCartQuantity } from '@/lib/cart-client';
 
 interface CartItem {
     product_id: number;
@@ -18,7 +19,7 @@ export default function CartPage() {
 
     useEffect(() => {
         const loadCart = async () => {
-            const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const storedCart = getCartEntries();
             if (storedCart.length === 0) {
                 setCartItems([]);
                 setLoading(false);
@@ -61,11 +62,7 @@ export default function CartPage() {
         setCartItems(updatedCart);
         
         // Update localStorage
-        const storeData = updatedCart.map(({ product_id, quantity }) => ({ product_id, quantity }));
-        localStorage.setItem('cart', JSON.stringify(storeData));
-        
-        // Notify other components
-        window.dispatchEvent(new Event('cart-updated'));
+        updateCartQuantity(productId, newQty);
     };
 
     const removeItem = (productId: number) => {
@@ -73,11 +70,7 @@ export default function CartPage() {
         setCartItems(updatedCart);
         
         // Update localStorage
-        const storeData = updatedCart.map(({ product_id, quantity }) => ({ product_id, quantity }));
-        localStorage.setItem('cart', JSON.stringify(storeData));
-        
-        // Notify other components
-        window.dispatchEvent(new Event('cart-updated'));
+        removeCartItem(productId);
     };
 
     const total = cartItems.reduce((acc, item) => acc + (item.subtotal || 0), 0);

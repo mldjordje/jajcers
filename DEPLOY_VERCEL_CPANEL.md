@@ -48,6 +48,14 @@ Recommended:
 
 Then Next.js should call `https://api.jajce.rs/...` for backend APIs.
 
+## 7) cPanel cron for order retention
+
+Add one daily cron on cPanel:
+
+`/usr/local/bin/php /home/jajcers/public_html/api2/api/cron_cleanup_orders.php`
+
+This removes only finished orders (`Gotova`) older than 14 days and keeps contact messages untouched.
+
 ## 6) Validation checklist
 
 - Admin login works: `/admin/login`

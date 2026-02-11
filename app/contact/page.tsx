@@ -27,7 +27,7 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="body-wrapper">
+        <>
             <div className="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/content/thumbnail.jpg">
                 <div className="container">
                     <div className="row">
@@ -135,6 +135,6 @@ export default function ContactPage() {
             <div className="google-map mb-120">
                 <iframe src="https://maps.google.com/maps?q=43.372477,21.810378+(Poljoprivredno%20gazdinstvo%20Nešić)&t=h&z=17&ie=UTF8&iwloc=B&output=embed" width="100%" height="100%" frameBorder="0" allowFullScreen aria-hidden="false" tabIndex={0}></iframe>
             </div>
-        </div>
+        </>
     );
 }

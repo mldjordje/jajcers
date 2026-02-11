@@ -28,7 +28,10 @@ async function getAboutData() {
       teamMembers: TeamMember[];
       testimonials: Testimonial[];
       faqs: FAQ[];
-    }>('aboutData.php');
+    }>('aboutData.php', {
+      cache: 'force-cache',
+      next: { revalidate: 300 },
+    });
 
     if (response.status !== 'success') {
       return { teamMembers: [], testimonials: [], faqs: [] };

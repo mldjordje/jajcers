@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import OrderList from '@/components/admin/OrderList';
 import { getAllOrders } from '@/app/actions/order';
 
@@ -32,12 +32,19 @@ export default async function AdminOrdersPage() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
-        Porudzbine
-      </Typography>
-      <Typography color="text.secondary" sx={{ mb: 2 }}>
-        Upravljanje statusima i pregled svih porudzbina.
-      </Typography>
+      <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} sx={{ mb: 2 }}>
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+            Porudzbine
+          </Typography>
+          <Typography color="text.secondary">
+            Upravljanje statusima i pregled svih porudzbina.
+          </Typography>
+        </Box>
+        <Button href="/admin/orders/new" variant="contained">
+          Dodaj porudzbinu
+        </Button>
+      </Stack>
 
       <OrderList initialOrders={serializedOrders} />
     </Box>

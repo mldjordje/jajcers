@@ -12,8 +12,10 @@ interface CheckoutRequestBody {
   email: string;
   phone: string;
   address: string;
-  city?: string;
+  city: 'Nis' | 'Beograd';
   note?: string;
+  customerUserId?: number;
+  couponCode?: string;
   cartItems: CheckoutItemInput[];
 }
 
@@ -29,6 +31,9 @@ export async function POST(request: Request) {
   if (!body.firstName || !body.lastName || !body.email || !body.phone || !body.address || !body.cartItems?.length) {
     return NextResponse.json({ message: 'Missing checkout fields.' }, { status: 400 });
   }
+  if (!body.customerUserId || body.customerUserId <= 0) {
+    return NextResponse.json({ message: 'Login je obavezan za narucivanje.' }, { status: 401 });
+  }
 
   const formData = new URLSearchParams();
   formData.set('first_name', body.firstName);
@@ -39,6 +44,12 @@ export async function POST(request: Request) {
   formData.set('city', body.city || 'Nis');
   formData.set('note', body.note || '');
   formData.set('cart_json', JSON.stringify(body.cartItems));
+  if (body.customerUserId) {
+    formData.set('customer_user_id', String(body.customerUserId));
+  }
+  if (body.couponCode) {
+    formData.set('coupon_code', body.couponCode);
+  }
 
   try {
     const response = await fetch(buildPhpApiUrl('checkout.php'), {
@@ -50,7 +61,17 @@ export async function POST(request: Request) {
       cache: 'no-store',
     });
 
-    const payload = (await response.json()) as { status?: string; message?: string; orderId?: number };
+    const payload = (await response.json()) as {
+      status?: string;
+      message?: string;
+      orderId?: number;
+      summary?: {
+        subtotal: number;
+        delivery_fee: number;
+        discount_amount: number;
+        grand_total: number;
+      };
+    };
 
     if (!response.ok || payload.status !== 'success') {
       return NextResponse.json({ message: payload.message || 'Checkout failed.' }, { status: 400 });
@@ -60,6 +81,7 @@ export async function POST(request: Request) {
       status: 'success',
       message: payload.message || 'Order created.',
       orderId: payload.orderId,
+      summary: payload.summary,
     });
   } catch (error) {
     console.error('Checkout proxy error:', error);

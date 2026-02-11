@@ -18,7 +18,10 @@ async function getServicesData() {
       status: string;
       history: HistoryEvent[];
       services: Service[];
-    }>('servicesData.php');
+    }>('servicesData.php', {
+      cache: 'force-cache',
+      next: { revalidate: 300 },
+    });
 
     if (response.status !== 'success') {
       return { history: [], services: [] };

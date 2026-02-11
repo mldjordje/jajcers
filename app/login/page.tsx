@@ -1,16 +1,50 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [nextPath, setNextPath] = useState('/account/orders');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const candidate = params.get('next');
+    if (candidate && candidate.startsWith('/')) {
+      setNextPath(candidate);
+    }
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage('Prijava korisnika bice vezana na API u narednom koraku migracije.');
+    setMessage('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/customer/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const payload = (await response.json()) as { success?: boolean; message?: string };
+      if (!response.ok || !payload.success) {
+        setMessage(payload.message || 'Prijava nije uspela.');
+        setLoading(false);
+        return;
+      }
+
+      router.replace(nextPath.startsWith('/') ? nextPath : '/account/orders');
+      router.refresh();
+    } catch {
+      setMessage('Doslo je do greske pri prijavi.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,10 +69,10 @@ export default function LoginPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   required
                 />
-                <button className="theme-btn-1 btn btn-block" type="submit">
-                  Prijavi se
+                <button className="theme-btn-1 btn btn-block" type="submit" disabled={loading}>
+                  {loading ? 'Prijava...' : 'Prijavi se'}
                 </button>
-                {message && <p className="mt-15">{message}</p>}
+                {message ? <p className="mt-15">{message}</p> : null}
                 <p className="mt-20">
                   Nemate nalog? <Link href="/register">Registrujte se</Link>
                 </p>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import AddToCart from '@/components/AddToCart';
 import { fetchPhpApiJson } from '@/lib/php-api';
+import { resolveProductImage } from '@/lib/product-image';
 
 interface Product {
   id: number;
@@ -53,8 +54,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             <div className="ltn__shop-details-large-img">
                                 {product.main_image && (
                                     <div className="single-large-img">
-                                        <a href={product.main_image} data-rel="lightcase:myCollection">
-                                            <img src={product.main_image} alt={product.name} />
+                                        <a href={resolveProductImage(product.name, product.main_image)} data-rel="lightcase:myCollection">
+                                            <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
                                         </a>
                                     </div>
                                 )}
@@ -71,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                              <div className="ltn__shop-details-small-img slick-arrow-2">
                                 {product.main_image && (
                                     <div className="single-small-img">
-                                         <img src={product.main_image} alt="Thumb Main" />
+                                         <img src={resolveProductImage(product.name, product.main_image)} alt="Thumb Main" />
                                     </div>
                                 )}
                                 {extraImages.map((img, idx) => (

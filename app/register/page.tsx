@@ -1,18 +1,56 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage('Registracija korisnika bice povezana sa backend API-jem u narednom koraku.');
+    setMessage('');
+
+    if (password !== confirmPassword) {
+      setMessage('Lozinke se ne poklapaju.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/customer/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstname: firstName,
+          lastname: lastName,
+          email,
+          password,
+          confirmpassword: confirmPassword,
+        }),
+      });
+
+      const payload = (await response.json()) as { success?: boolean; message?: string };
+      if (!response.ok || !payload.success) {
+        setMessage(payload.message || 'Registracija nije uspela.');
+        setLoading(false);
+        return;
+      }
+
+      router.replace('/account/orders');
+      router.refresh();
+    } catch {
+      setMessage('Doslo je do greske pri registraciji.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,10 +95,17 @@ export default function RegisterPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   required
                 />
-                <button className="theme-btn-1 btn btn-block" type="submit">
-                  Registruj se
+                <input
+                  type="password"
+                  placeholder="Potvrdite lozinku"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  required
+                />
+                <button className="theme-btn-1 btn btn-block" type="submit" disabled={loading}>
+                  {loading ? 'Registracija...' : 'Registruj se'}
                 </button>
-                {message && <p className="mt-15">{message}</p>}
+                {message ? <p className="mt-15">{message}</p> : null}
                 <p className="mt-20">
                   Vec imate nalog? <Link href="/login">Prijavite se</Link>
                 </p>
