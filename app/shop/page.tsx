@@ -26,7 +26,7 @@ export default async function Shop() {
     const products = await getProducts();
 
     return (
-        <div className="ltn__product-area ltn__product-gutter mb-120 pt-80">
+        <div className="ltn__product-area ltn__product-gutter mb-120 pt-80 section-animate">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -55,7 +55,7 @@ export default async function Shop() {
                                                             </Link>
                                                         </li>
                                                         <li>
-                                                            <AddToCartButton productId={product.id} productName={product.name} className="theme-btn-1 btn btn-effect-1 btn-sm" />
+                                                            <AddToCartButton productId={product.id} productName={product.name} />
                                                         </li>
                                                     </ul>
                                                 </div>

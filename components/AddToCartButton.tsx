@@ -24,12 +24,15 @@ export default function AddToCartButton({ productId, productName, className }: A
       <Button
         type="button"
         onPress={handleClick}
-        color="primary"
-        radius="md"
-        className={className ?? 'ui-cta'}
+        color="success"
+        radius="full"
+        variant="shadow"
+        size="sm"
+        className={className ?? 'cart-add-btn'}
         aria-label={`Dodaj ${productName} u korpu`}
+        startContent={<i className="fas fa-shopping-cart" />}
       >
-        <i className="fas fa-shopping-cart" style={{ marginRight: 8 }} /> Dodaj u korpu
+        Dodaj u korpu
       </Button>
       {message ? <p className="mt-10" style={{ color: '#0f766e', fontWeight: 600 }}>{message}</p> : null}
     </>

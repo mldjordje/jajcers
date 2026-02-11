@@ -77,7 +77,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="liton__shoping-cart-area mb-120 pt-80">
+    <div className="liton__shoping-cart-area mb-120 pt-80 section-animate">
       <div className="container">
         <div className="row">
           <div className="col-lg-12">

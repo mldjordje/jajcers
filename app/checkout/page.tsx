@@ -173,7 +173,7 @@ export default function CheckoutPage() {
 
   if (!customer && !guestMode) {
     return (
-      <div className="container pt-100 pb-100">
+      <div className="container pt-100 pb-100 section-animate">
         <div className="row justify-content-center">
           <div className="col-lg-8">
             <div className="section-title-area text-center">
@@ -204,7 +204,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="ltn__checkout-area mb-105 pt-80">
+    <div className="ltn__checkout-area mb-105 pt-80 section-animate">
       <div className="container">
         <div className="row">
           <div className="col-lg-6">

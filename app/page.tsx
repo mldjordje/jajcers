@@ -53,7 +53,7 @@ export default async function Home() {
   return (
     <>
                 {/* HERO AREA START */}
-        <section className="home-hero">
+        <section className="home-hero section-animate">
             <div className="container">
                 <div className="row align-items-center">
                     <div className="col-lg-6">
@@ -82,7 +82,7 @@ export default async function Home() {
         </section>
         {/* HERO AREA END */}
         {/* PRODUCT TAB AREA START */}
-        <div className="ltn__product-tab-area ltn__product-gutter pt-50 pb-30">
+        <div className="ltn__product-tab-area ltn__product-gutter pt-50 pb-30 section-animate section-animate--2">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -115,7 +115,7 @@ export default async function Home() {
                                                         </Link>
                                                     </li>
                                                     <li>
-                                                        <AddToCartButton productId={product.id} productName={product.name} className="theme-btn-1 btn btn-effect-1 btn-sm" />
+                                                        <AddToCartButton productId={product.id} productName={product.name} />
                                                     </li>
                                                     <li>
                                                         <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
@@ -144,7 +144,7 @@ export default async function Home() {
         {/* PRODUCT TAB AREA END */}
 
         {/* FEATURE AREA START ( Feature - 3) */}
-        <div className="ltn__feature-area mt--65">
+        <div className="ltn__feature-area mt--65 section-animate section-animate--3">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -193,7 +193,7 @@ export default async function Home() {
         {/* FEATURE AREA END */}
 
         {/* ABOUT US AREA START */}
-        <div className="ltn__about-us-area pt-50 pb-120">
+        <div className="ltn__about-us-area pt-50 pb-120 section-animate section-animate--4">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-6 align-self-center">
@@ -224,7 +224,7 @@ export default async function Home() {
         {/* ABOUT US AREA END */}
 
         {/* MOST SOLD PRODUCTS SECTION START */}
-        <div className="ltn__category-area section-bg-1-- ltn__primary-bg before-bg-1 bg-image bg-overlay-theme-black-5--0 pt-115 pb-90" data-bg="img/bg/5.jpg" style={{ backgroundImage: "url('/img/bg/5.jpg')" }}>
+        <div className="ltn__category-area section-bg-1-- ltn__primary-bg before-bg-1 bg-image bg-overlay-theme-black-5--0 pt-115 pb-90 section-animate section-animate--5" data-bg="img/bg/5.jpg" style={{ backgroundImage: "url('/img/bg/5.jpg')" }}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -265,7 +265,7 @@ export default async function Home() {
         {/* MOST SOLD PRODUCTS SECTION END */}
 
         {/* COUNTER UP AREA START */}
-        <div className="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70" data-bg="img/bg/5.jpg" style={{ backgroundImage: "url('/img/bg/5.jpg')" }}>
+        <div className="ltn__counterup-area bg-image bg-overlay-theme-black-80 pt-115 pb-70 section-animate section-animate--6" data-bg="img/bg/5.jpg" style={{ backgroundImage: "url('/img/bg/5.jpg')" }}>
             <div className="container">
                 <div className="row">
                     <div className="col-md-4 col-sm-6 align-self-center">
@@ -295,7 +295,7 @@ export default async function Home() {
         {/* COUNTER UP AREA END */}
 
         {/* BLOG AREA START (blog-3) */}
-        <div className="ltn__blog-area pt-115 pb-70">
+        <div className="ltn__blog-area pt-115 pb-70 section-animate section-animate--7">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -404,7 +404,7 @@ export default async function Home() {
         {/* BLOG AREA END */}
 
         {/* FEATURE AREA START ( Feature - 3) */}
-        <div className="ltn__feature-area before-bg-bottom-2-- mb--30--- plr--5 mb-120">
+        <div className="ltn__feature-area before-bg-bottom-2-- mb--30--- plr--5 mb-120 section-animate section-animate--8">
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-lg-12">
