@@ -27,6 +27,8 @@ export default function Header() {
   const [cartEntries, setCartEntries] = useState<CartEntry[]>([]);
   const [cartProducts, setCartProducts] = useState<CartProduct[]>([]);
   const [user, setUser] = useState<CustomerSession['user']>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const subtotal = useMemo(() => {
     return cartEntries.reduce((sum, entry) => {
@@ -36,6 +38,7 @@ export default function Header() {
   }, [cartEntries, cartProducts]);
 
   const cartCount = useMemo(() => getCartCount(cartEntries), [cartEntries]);
+  const isAnyUtilOpen = isCartOpen || isMobileMenuOpen;
 
   useEffect(() => {
     const syncCart = () => setCartEntries(getCartEntries());
@@ -87,6 +90,23 @@ export default function Header() {
     };
     void loadSession();
   }, []);
+
+  useEffect(() => {
+    if (isAnyUtilOpen) {
+      document.body.classList.add('ltn__utilize-open');
+    } else {
+      document.body.classList.remove('ltn__utilize-open');
+    }
+
+    return () => {
+      document.body.classList.remove('ltn__utilize-open');
+    };
+  }, [isAnyUtilOpen]);
+
+  const closeAllMenus = () => {
+    setIsCartOpen(false);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -162,14 +182,15 @@ export default function Header() {
                 ) : null}
 
                 <div className="mini-cart-icon">
-                  <a
-                    href="#ltn__utilize-cart-menu"
-                    className="ltn__utilize-toggle"
-                    style={{ display: 'flex', alignItems: 'center' }}
+                  <button
+                    type="button"
+                    onClick={() => setIsCartOpen(true)}
+                    style={{ display: 'flex', alignItems: 'center', background: 'transparent', border: 0 }}
+                    aria-label="Otvori korpu"
                   >
                     <i className="icon-shopping-cart" />
                     <sup id="mini-cart-count">{cartCount}</sup>
-                  </a>
+                  </button>
                 </div>
                 <div className="mini-cart-icon">
                   <Link href="/wishlist">
@@ -177,13 +198,18 @@ export default function Header() {
                   </Link>
                 </div>
                 <div className="mobile-menu-toggle d-xl-none">
-                  <a href="#ltn__utilize-mobile-menu" className="ltn__utilize-toggle">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    style={{ background: 'transparent', border: 0 }}
+                    aria-label="Otvori meni"
+                  >
                     <svg viewBox="0 0 800 600">
                       <path d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200" id="top" />
                       <path d="M300,320 L540,320" id="middle" />
                       <path d="M300,210 C300,210 520,210 540,210 C740,210 640,530 520,410 C440,330 300,190 300,190" id="bottom" transform="translate(480, 320) scale(1, -1) translate(-480, -318) " />
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -191,11 +217,13 @@ export default function Header() {
         </div>
       </header>
 
-      <div id="ltn__utilize-cart-menu" className="ltn__utilize ltn__utilize-cart-menu">
+      <div id="ltn__utilize-cart-menu" className={`ltn__utilize ltn__utilize-cart-menu${isCartOpen ? ' ltn__utilize-open' : ''}`}>
         <div className="ltn__utilize-menu-inner ltn__scrollbar">
           <div className="ltn__utilize-menu-head">
             <span className="ltn__utilize-menu-title">Korpa</span>
-            <button className="ltn__utilize-close">x</button>
+            <button className="ltn__utilize-close" onClick={closeAllMenus} type="button">
+              x
+            </button>
           </div>
           <div className="mini-cart-product-area ltn__scrollbar" id="mini-cart-body">
             {cartEntries.length === 0 ? (
@@ -248,10 +276,10 @@ export default function Header() {
               </h5>
             </div>
             <div className="btn-wrapper">
-              <Button as={Link} href="/cart" color="primary" className="ui-cta">
+              <Button as={Link} href="/cart" color="primary" className="ui-cta" onPress={closeAllMenus}>
                 Korpa
               </Button>
-              <Button as={Link} href="/checkout" variant="bordered" className="ui-ghost">
+              <Button as={Link} href="/checkout" variant="bordered" className="ui-ghost" onPress={closeAllMenus}>
                 Placanje
               </Button>
             </div>
@@ -259,7 +287,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div id="ltn__utilize-mobile-menu" className="ltn__utilize ltn__utilize-mobile-menu">
+      <div id="ltn__utilize-mobile-menu" className={`ltn__utilize ltn__utilize-mobile-menu${isMobileMenuOpen ? ' ltn__utilize-open' : ''}`}>
         <div className="ltn__utilize-menu-inner ltn__scrollbar">
           <div className="ltn__utilize-menu-head">
             <div className="site-logo">
@@ -267,27 +295,29 @@ export default function Header() {
                 <img src="/content/logo.png" alt="Logo" />
               </Link>
             </div>
-            <button className="ltn__utilize-close">x</button>
+            <button className="ltn__utilize-close" onClick={closeAllMenus} type="button">
+              x
+            </button>
           </div>
           <div className="ltn__utilize-menu">
             <ul>
               <li>
-                <Link href="/">Pocetna</Link>
+                <Link href="/" onClick={closeAllMenus}>Pocetna</Link>
               </li>
               <li>
-                <Link href="/about">O nama</Link>
+                <Link href="/about" onClick={closeAllMenus}>O nama</Link>
               </li>
               <li>
-                <Link href="/services">Usluge</Link>
+                <Link href="/services" onClick={closeAllMenus}>Usluge</Link>
               </li>
               <li>
-                <Link href="/contact">Kontakt</Link>
+                <Link href="/contact" onClick={closeAllMenus}>Kontakt</Link>
               </li>
               <li>
-                <Link href="/order-tracking">Pracenje</Link>
+                <Link href="/order-tracking" onClick={closeAllMenus}>Pracenje</Link>
               </li>
               <li className="special-link" style={{ margin: 'unset', marginTop: '20px' }}>
-                <Link href="/shop">
+                <Link href="/shop" onClick={closeAllMenus}>
                   Prodavnica <i className="fa fa-shopping-bag" />
                 </Link>
               </li>
@@ -297,19 +327,19 @@ export default function Header() {
             <ul>
               {user ? (
                 <li>
-                  <Link href="/account/orders">
+                  <Link href="/account/orders" onClick={closeAllMenus}>
                     <i className="icon-user" /> {user.firstname}
                   </Link>
                 </li>
               ) : (
                 <>
                   <li>
-                    <Link href="/login">
+                    <Link href="/login" onClick={closeAllMenus}>
                       <i className="fa fa-key" /> Prijava
                     </Link>
                   </li>
                   <li>
-                    <Link href="/register">
+                    <Link href="/register" onClick={closeAllMenus}>
                       <i className="icon-user" /> Registracija
                     </Link>
                   </li>
@@ -334,7 +364,11 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="ltn__utilize-overlay" />
+      <div
+        className="ltn__utilize-overlay"
+        onClick={closeAllMenus}
+        style={{ display: isAnyUtilOpen ? 'block' : 'none' }}
+      />
     </>
   );
 }
