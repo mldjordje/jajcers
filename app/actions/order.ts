@@ -1,24 +1,23 @@
 'use server';
 
-import pool, { isDatabaseConfigured } from '@/lib/db';
+import { buildPhpApiUrl, fetchPhpApiJson } from '@/lib/php-api';
 import { isAllowedOrderStatus } from '@/lib/order-status';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
-export interface OrderRow extends RowDataPacket {
+export interface OrderRow {
   id: number;
   first_name: string;
   last_name: string;
   email: string;
   total_amount: number | string;
   status: string;
-  created_at: Date | string | null;
+  created_at: string | null;
   address: string | null;
   city: string | null;
   phone: string | null;
   note: string | null;
 }
 
-export interface OrderItemRow extends RowDataPacket {
+export interface OrderItemRow {
   product_id: number;
   quantity: number;
   price: number | string;
@@ -30,105 +29,77 @@ export interface OrderWithItems extends OrderRow {
   items: OrderItemRow[];
 }
 
-async function getOrderItems(orderId: number): Promise<OrderItemRow[]> {
-  const [items] = await pool.query<OrderItemRow[]>(
-    `
-      SELECT
-        oi.product_id,
-        oi.quantity,
-        oi.price,
-        p.name,
-        p.main_image
-      FROM order_items oi
-      LEFT JOIN products p ON p.id = oi.product_id
-      WHERE oi.order_id = ?
-      ORDER BY oi.id ASC
-    `,
-    [orderId],
-  );
+interface OrderResponse {
+  status: string;
+  order?: OrderWithItems | null;
+}
 
-  return items;
+interface OrdersResponse {
+  status: string;
+  orders: OrderRow[];
 }
 
 export async function getOrder(orderId: number, email: string): Promise<OrderWithItems | null> {
-  if (!isDatabaseConfigured) {
-    return null;
-  }
-
   try {
-    const [orders] = await pool.query<OrderRow[]>(
-      'SELECT * FROM orders WHERE id = ? AND email = ? LIMIT 1',
-      [orderId, email],
-    );
-
-    if (orders.length === 0) {
-      return null;
-    }
-
-    const items = await getOrderItems(orderId);
-    return { ...orders[0], items };
+    const query = `order_id=${encodeURIComponent(String(orderId))}&email=${encodeURIComponent(email)}`;
+    const response = await fetchPhpApiJson<OrderResponse>(`orderTrack.php?${query}`);
+    return response.status === 'success' ? response.order ?? null : null;
   } catch (error) {
-    console.error('Order lookup failed:', error);
+    console.error('getOrder failed:', error);
     return null;
   }
 }
 
 export async function getOrderById(orderId: number): Promise<OrderWithItems | null> {
-  if (!isDatabaseConfigured) {
-    return null;
-  }
-
   try {
-    const [orders] = await pool.query<OrderRow[]>('SELECT * FROM orders WHERE id = ? LIMIT 1', [orderId]);
-
-    if (orders.length === 0) {
-      return null;
-    }
-
-    const items = await getOrderItems(orderId);
-    return { ...orders[0], items };
+    const response = await fetchPhpApiJson<OrderResponse>(
+      `adminOrder.php?id=${encodeURIComponent(String(orderId))}`,
+    );
+    return response.status === 'success' ? response.order ?? null : null;
   } catch (error) {
-    console.error('Admin order lookup failed:', error);
+    console.error('getOrderById failed:', error);
     return null;
   }
 }
 
 export async function getAllOrders(): Promise<OrderRow[]> {
-  if (!isDatabaseConfigured) {
-    return [];
-  }
-
   try {
-    const [rows] = await pool.query<OrderRow[]>('SELECT * FROM orders ORDER BY created_at DESC');
-    return rows;
+    const response = await fetchPhpApiJson<OrdersResponse>('adminOrders.php');
+    return response.status === 'success' ? response.orders ?? [] : [];
   } catch (error) {
-    console.error('Database error while reading orders:', error);
+    console.error('getAllOrders failed:', error);
     return [];
   }
 }
 
 export async function updateOrderStatus(orderId: number, status: string) {
-  if (!isDatabaseConfigured) {
-    return { success: false, error: 'Baza nije konfigurisana.' };
-  }
-
   if (!isAllowedOrderStatus(status)) {
     return { success: false, error: 'Unsupported status value.' };
   }
 
   try {
-    const [result] = await pool.query<ResultSetHeader>(
-      'UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?',
-      [status, orderId],
-    );
+    const body = new URLSearchParams();
+    body.set('order_id', String(orderId));
+    body.set('status', status);
 
-    if (result.affectedRows === 0) {
-      return { success: false, error: 'Order not found.' };
+    const response = await fetch(buildPhpApiUrl('adminUpdateOrderStatus.php'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+      cache: 'no-store',
+    });
+
+    const payload = (await response.json()) as { status?: string; message?: string };
+
+    if (!response.ok || payload.status !== 'success') {
+      return { success: false, error: payload.message || 'Update failed.' };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Order status update failed:', error);
-    return { success: false, error: 'Database update failed.' };
+    console.error('updateOrderStatus failed:', error);
+    return { success: false, error: 'Update request failed.' };
   }
 }

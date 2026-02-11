@@ -1,8 +1,7 @@
-import pool from '@/lib/db';
 import Link from 'next/link';
-import { RowDataPacket } from 'mysql2';
+import { fetchPhpApiJson } from '@/lib/php-api';
 
-interface Product extends RowDataPacket {
+interface Product {
   id: number;
   name: string;
   price_per_piece: number;
@@ -10,12 +9,12 @@ interface Product extends RowDataPacket {
 }
 
 async function getProducts() {
-    try {
-        const [rows] = await pool.query<Product[]>('SELECT * FROM products ORDER BY created_at ASC');
-        return rows;
-    } catch (e) {
-        return [];
-    }
+  try {
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php');
+    return response.status === 'success' ? response.products : [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function Shop() {

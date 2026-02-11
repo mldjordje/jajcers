@@ -1,7 +1,6 @@
-import pool from '@/lib/db';
-import { RowDataPacket } from 'mysql2';
+import { fetchPhpApiJson } from '@/lib/php-api';
 
-interface TeamMember extends RowDataPacket {
+interface TeamMember {
   firstname: string;
   lastname: string;
   position: string;
@@ -9,53 +8,45 @@ interface TeamMember extends RowDataPacket {
   image: string;
 }
 
-interface Testimonial extends RowDataPacket {
+interface Testimonial {
   name: string;
   position: string;
   comment: string;
   image_base64?: string;
 }
 
-interface FAQ extends RowDataPacket {
+interface FAQ {
   id: number;
   question: string;
   answer: string;
 }
 
-async function getTeamMembers() {
+async function getAboutData() {
   try {
-    const [rows] = await pool.query<TeamMember[]>('SELECT firstname, lastname, position, phone_number, image FROM team_members ORDER BY id ASC');
-    return rows;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+    const response = await fetchPhpApiJson<{
+      status: string;
+      teamMembers: TeamMember[];
+      testimonials: Testimonial[];
+      faqs: FAQ[];
+    }>('aboutData.php');
 
-async function getTestimonials() {
-  try {
-    const [rows] = await pool.query<Testimonial[]>('SELECT * FROM testimonials ORDER BY created_at DESC');
-    return rows;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+    if (response.status !== 'success') {
+      return { teamMembers: [], testimonials: [], faqs: [] };
+    }
 
-async function getFAQs() {
-  try {
-    const [rows] = await pool.query<FAQ[]>('SELECT * FROM faq ORDER BY id ASC');
-    return rows;
+    return {
+      teamMembers: response.teamMembers ?? [],
+      testimonials: response.testimonials ?? [],
+      faqs: response.faqs ?? [],
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return { teamMembers: [], testimonials: [], faqs: [] };
   }
 }
 
 export default async function AboutPage() {
-  const teamMembers = await getTeamMembers();
-  const testimonials = await getTestimonials();
-  const faqs = await getFAQs();
+  const { teamMembers, testimonials, faqs } = await getAboutData();
 
   return (
     <>

@@ -1,8 +1,7 @@
 import { getOrder } from '@/app/actions/order';
 import Link from 'next/link';
-import { RowDataPacket, FieldPacket } from 'mysql2';
 
-interface OrderItem extends RowDataPacket {
+interface OrderItem {
   product_id: number;
   quantity: number;
   price: number;
@@ -10,7 +9,7 @@ interface OrderItem extends RowDataPacket {
   main_image: string;
 }
 
-interface Order extends RowDataPacket {
+interface Order {
   id: number;
   first_name: string;
   last_name: string;

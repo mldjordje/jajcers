@@ -1,21 +1,34 @@
 import { NextResponse } from 'next/server';
+import { buildPhpApiUrl } from '@/lib/php-api';
 
 export async function POST(request: Request) {
-    try {
-        const formData = await request.formData();
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const phone = formData.get('phone');
-        const message = formData.get('message');
-        const serviceType = formData.get('service_type');
+  let formData: FormData;
 
-        // Here you would typically save to DB or send email
-        console.log('Contact Form Submission:', { name, email, phone, message, serviceType });
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ status: 'error', message: 'Invalid form payload.' }, { status: 400 });
+  }
 
-        // For now, return success
-        return NextResponse.json({ status: 'success', message: 'Vaša poruka je uspešno poslata!' });
-    } catch (error) {
-        console.error('Contact API Error:', error);
-        return NextResponse.json({ status: 'error', message: 'Došlo je do greške.' }, { status: 500 });
-    }
+  const upstreamBody = new URLSearchParams();
+  for (const [key, value] of formData.entries()) {
+    upstreamBody.set(key, String(value));
+  }
+
+  try {
+    const response = await fetch(buildPhpApiUrl('contact.php'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: upstreamBody.toString(),
+      cache: 'no-store',
+    });
+
+    const payload = (await response.json()) as { status?: string; message?: string };
+    return NextResponse.json(payload, { status: response.ok ? 200 : response.status });
+  } catch (error) {
+    console.error('Contact proxy error:', error);
+    return NextResponse.json({ status: 'error', message: 'Contact service unavailable.' }, { status: 503 });
+  }
 }

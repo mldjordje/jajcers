@@ -1,17 +1,16 @@
-import pool from '@/lib/db';
 import Link from 'next/link';
-import { RowDataPacket } from 'mysql2';
+import { fetchPhpApiJson } from '@/lib/php-api';
 
 // Define types for our data
-interface Product extends RowDataPacket {
+interface Product {
   id: number;
   name: string;
   price_per_piece: number;
   main_image: string;
-  created_at?: Date;
+  created_at?: string;
 }
 
-interface TopProduct extends RowDataPacket {
+interface TopProduct {
   id: number;
   name: string;
   main_image: string;
@@ -20,27 +19,20 @@ interface TopProduct extends RowDataPacket {
 
 async function getProducts() {
   try {
-    const [rows] = await pool.query<Product[]>('SELECT * FROM products ORDER BY created_at ASC');
-    return rows;
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php');
+    return response.status === 'success' ? response.products : [];
   } catch (error) {
-    console.error('Database Error:', error);
+    console.error('Products API error:', error);
     return [];
   }
 }
 
 async function getTopProducts() {
   try {
-    const [rows] = await pool.query<TopProduct[]>(`
-        SELECT p.id, p.name, p.main_image, SUM(oi.quantity) AS total_sold
-        FROM order_items oi
-        JOIN products p ON p.id = oi.product_id
-        GROUP BY p.id
-        ORDER BY total_sold DESC
-        LIMIT 4
-    `);
-    return rows;
+    const response = await fetchPhpApiJson<{ status: string; products: TopProduct[] }>('topProducts.php');
+    return response.status === 'success' ? response.products : [];
   } catch (error) {
-    console.error('Database Error:', error);
+    console.error('Top products API error:', error);
     return [];
   }
 }

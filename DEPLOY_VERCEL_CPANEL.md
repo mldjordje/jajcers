@@ -21,15 +21,11 @@ Deploy only Next.js app (this repo):
 
 Set these in Project Settings -> Environment Variables:
 
-- `DB_HOST`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_NAME`
+- `PHP_API_BASE` (example: `https://api.jajce.rs/api`)
+- `NEXT_PUBLIC_PHP_API_BASE` (same value as above)
 - `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
 - `ADMIN_AUTH_TOKEN`
-
-If backend remains on cPanel, `DB_HOST` must be cPanel DB host (not localhost).
 
 ## 4) What stays on cPanel
 
@@ -56,5 +52,5 @@ Then Next.js should call `https://api.jajce.rs/...` for backend APIs.
 
 - Admin login works: `/admin/login`
 - Public pages work on Vercel domain
-- Checkout/API calls hit cPanel endpoints (or DB if remote MySQL is enabled)
+- Checkout/API calls hit cPanel endpoints (`api.jajce.rs`)
 - No mixed-content/http links

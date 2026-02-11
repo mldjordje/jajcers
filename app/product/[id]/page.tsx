@@ -1,46 +1,42 @@
-import pool from '@/lib/db';
 import Link from 'next/link';
 import AddToCart from '@/components/AddToCart';
-import { RowDataPacket } from 'mysql2';
+import { fetchPhpApiJson } from '@/lib/php-api';
 
-interface Product extends RowDataPacket {
+interface Product {
   id: number;
   name: string;
   price_per_piece: number;
   main_image: string;
   description: string;
   stock: number;
-  created_at?: Date;
 }
 
-interface ProductImage extends RowDataPacket {
+interface ProductImage {
   image: string;
 }
 
 async function getProduct(id: string) {
-    try {
-        const [rows] = await pool.query<Product[]>('SELECT * FROM products WHERE id = ?', [id]);
-        return rows[0] || null;
-    } catch (e) {
-        console.error(e);
-        return null;
-    }
-}
+  try {
+    const response = await fetchPhpApiJson<{
+      status: string;
+      product: Product | null;
+      images: ProductImage[];
+    }>(`productDetails.php?id=${encodeURIComponent(id)}`);
 
-async function getExtraImages(id: string) {
-    try {
-        const [rows] = await pool.query<ProductImage[]>('SELECT image FROM product_images WHERE product_id = ?', [id]);
-        return rows;
-    } catch (e) {
-        console.error(e);
-        return [];
+    if (response.status !== 'success' || !response.product) {
+      return { product: null, extraImages: [] };
     }
+
+    return { product: response.product, extraImages: response.images ?? [] };
+  } catch (error) {
+    console.error(error);
+    return { product: null, extraImages: [] };
+  }
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const product = await getProduct(id);
-    const extraImages = await getExtraImages(id);
+    const { product, extraImages } = await getProduct(id);
 
     if (!product) return <div className="container pt-100 pb-100"><h3>Proizvod nije pronađen.</h3></div>;
 

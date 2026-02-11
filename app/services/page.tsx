@@ -1,41 +1,41 @@
-import pool from '@/lib/db';
-import { RowDataPacket } from 'mysql2';
+import { fetchPhpApiJson } from '@/lib/php-api';
 
-interface HistoryEvent extends RowDataPacket {
+interface HistoryEvent {
   year: string;
   title: string;
   description: string;
 }
 
-interface Service extends RowDataPacket {
+interface Service {
   title: string;
   description: string;
   image: string;
 }
 
-async function getHistory() {
+async function getServicesData() {
   try {
-    const [rows] = await pool.query<HistoryEvent[]>('SELECT * FROM history ORDER BY year ASC');
-    return rows;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+    const response = await fetchPhpApiJson<{
+      status: string;
+      history: HistoryEvent[];
+      services: Service[];
+    }>('servicesData.php');
 
-async function getServices() {
-  try {
-    const [rows] = await pool.query<Service[]>('SELECT * FROM services ORDER BY id ASC');
-    return rows;
+    if (response.status !== 'success') {
+      return { history: [], services: [] };
+    }
+
+    return {
+      history: response.history ?? [],
+      services: response.services ?? [],
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return { history: [], services: [] };
   }
 }
 
 export default async function ServicesPage() {
-  const history = await getHistory();
-  const services = await getServices();
+  const { history, services } = await getServicesData();
 
   return (
     <>
