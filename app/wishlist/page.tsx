@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getProductsByIds } from '@/app/actions/product';
+import { fetchProductsByIds } from '@/lib/products-client';
 
 interface WishlistItem {
   id: number;
@@ -29,7 +29,7 @@ export default function WishlistPage() {
         return;
       }
 
-      const products = await getProductsByIds(ids);
+      const products = await fetchProductsByIds(ids);
       const normalized = products.map((product) => ({
         id: Number(product.id),
         name: product.name,

@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getProductsByIds } from '@/app/actions/product';
 import { getCartEntries, removeCartItem, updateCartQuantity } from '@/lib/cart-client';
+import { fetchProductsByIds } from '@/lib/products-client';
 
 interface CartItem {
     product_id: number;
@@ -27,7 +27,7 @@ export default function CartPage() {
             }
 
             const ids = storedCart.map((item: any) => item.product_id);
-            const products = await getProductsByIds(ids);
+            const products = await fetchProductsByIds(ids);
 
             const mergedItems = storedCart.map((item: any) => {
                 const product = products.find((p: any) => p.id === item.product_id);

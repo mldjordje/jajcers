@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { getProductsByIds } from '@/app/actions/product';
 import { clearCart, getCartEntries } from '@/lib/cart-client';
+import { fetchProductsByIds } from '@/lib/products-client';
 
 interface CartItem {
   product_id: number;
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
 
       const ids = storedCart.map((item) => item.product_id);
       try {
-        const products = await getProductsByIds(ids);
+        const products = await fetchProductsByIds(ids);
         const mergedItems = storedCart
           .map((item) => {
             const product = products.find((p: { id: number }) => p.id === item.product_id);

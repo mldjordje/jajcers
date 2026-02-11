@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { CartEntry, getCartCount, getCartEntries } from '@/lib/cart-client';
+import { fetchProductsByIds } from '@/lib/products-client';
 
 interface CartProduct {
   id: number;
@@ -18,10 +19,6 @@ interface CustomerSession {
     lastname: string;
     email: string;
   } | null;
-}
-
-function getApiBase() {
-  return (process.env.NEXT_PUBLIC_PHP_API_BASE || 'https://api.jajce.rs/api').replace(/\/+$/, '');
 }
 
 export default function Header() {
@@ -59,13 +56,9 @@ export default function Header() {
 
     const loadProducts = async () => {
       try {
-        const url = `${getApiBase()}/getProductsByIds.php?ids=${encodeURIComponent(ids.join(','))}`;
-        const response = await fetch(url, { cache: 'no-store' });
-        const payload = (await response.json()) as { status?: string; products?: CartProduct[] };
-        if (response.ok && payload.status === 'success' && Array.isArray(payload.products)) {
-          setCartProducts(payload.products);
-          return;
-        }
+        const products = await fetchProductsByIds(ids);
+        setCartProducts(products);
+        return;
       } catch {
         // keep silent in header
       }
