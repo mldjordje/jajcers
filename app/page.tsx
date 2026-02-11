@@ -22,7 +22,7 @@ interface TopProduct {
 
 async function getProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php', {
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('productsLite.php?limit=36', {
       cache: 'force-cache',
       next: { revalidate: 300 },
     });
@@ -35,7 +35,7 @@ async function getProducts() {
 
 async function getTopProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: TopProduct[] }>('topProducts.php', {
+    const response = await fetchPhpApiJson<{ status: string; products: TopProduct[] }>('topProductsLite.php', {
       cache: 'force-cache',
       next: { revalidate: 300 },
     });
@@ -52,74 +52,35 @@ export default async function Home() {
 
   return (
     <>
-        {/* SLIDER AREA START (slider-3) */}
-        <div className="ltn__slider-area ltn__slider-3  section-bg-1">
-            <div className="ltn__slide-one-active slick-slide-arrow-1 slick-slide-dots-1">
-                {/* ltn__slide-item */}
-                <div className="ltn__slide-item ltn__slide-item-2 ltn__slide-item-3 ltn__slide-item-3-normal">
-                    <div className="ltn__slide-item-inner">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-lg-12 align-self-center">
-                                    <div className="slide-item-info">
-                                        <div className="slide-item-info-inner ltn__slide-animation">
-                                            <h6 className="slide-sub-title animated"><img style={{ maxWidth: "20px" }}
-                                                    src="/content/jajce.png" alt="#" /> 100% Sveža, prirodna i slobodno uzgojena jaja</h6>
-                                            <h1 className="slide-title animated">Sveža jaja
-                                                <br />direktno sa farme na vaš sto
-                                            </h1>
-                                            <div className="slide-brief animated">
-                                                <p>Bez posrednika, bez stajanja u skladištima – samo pravo domaće iskustvo i vrhunski kvalitet.
-                                                </p>
-                                            </div>
-                                            <div className="btn-wrapper animated">
-                                                <Link href="/shop" className="theme-btn-1 btn btn-effect-1 text-uppercase">Naruči jaja</Link>
-                                                <PwaInstallButton />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="slide-item-img">
-                                        <img src="/content/kokoska.png" alt="#" />
-                                    </div>
-                                </div>
+                {/* HERO AREA START */}
+        <section className="home-hero">
+            <div className="container">
+                <div className="row align-items-center">
+                    <div className="col-lg-6">
+                        <div className="home-hero__content">
+                            <h6 className="home-hero__eyebrow">
+                                <img style={{ maxWidth: '18px' }} src="/content/jajce.png" alt="Jaje ikonica" /> 100% sveza jaja iz slobodnog uzgoja
+                            </h6>
+                            <h1 className="home-hero__title">Sveza jaja direktno sa farme na vas sto</h1>
+                            <p className="home-hero__subtitle">
+                                Bez posrednika i dugog skladistenja. Stabilan kvalitet, brza dostava i direktna komunikacija sa proizvodjacem.
+                            </p>
+                            <div className="home-hero__actions">
+                                <Link href="/shop" className="ui-cta">Naruci jaja</Link>
+                                <Link href="/about" className="ui-ghost">Saznaj vise</Link>
+                                <PwaInstallButton />
                             </div>
                         </div>
                     </div>
-                </div>
-                {/* ltn__slide-item */}
-                <div className="ltn__slide-item ltn__slide-item-2 ltn__slide-item-3 ltn__slide-item-3-normal">
-                    <div className="ltn__slide-item-inner text-right text-end">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-lg-12 align-self-center">
-                                    <div className="slide-item-info">
-                                        <div className="slide-item-info-inner ltn__slide-animation">
-                                            <h6 className="slide-sub-title ltn__secondary-color animated">// 100% PRIRODNA
-                                                DOMAĆA JAJA</h6>
-                                            <h1 className="slide-title animated ">Sveža & nutritivna <br /> jaja sa naše farme
-                                            </h1>
-                                            <div className="slide-brief animated">
-                                                <p>Prirodno uzgojena jaja, bez aditiva i veštačkih dodataka. Bogata
-                                                    proteinima i savršena za zdrav početak dana!</p>
-                                            </div>
-                                            <div className="btn-wrapper animated">
-                                                <Link href="/shop" className="theme-btn-1 btn btn-effect-1 text-uppercase">Pogledaj Ponudu</Link>
-                                                <Link href="/about" className="btn btn-transparent btn-effect-3">Saznaj više</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="slide-item-img slide-img-left">
-                                        <img src="/content/farma.png" alt="Sveža domaća jaja" />
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="col-lg-6">
+                        <div className="home-hero__image-wrap">
+                            <img src="/content/kokoska.png" alt="Sveza domaca jaja" className="home-hero__image" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {/* SLIDER AREA END */}
-
+        </section>
+        {/* HERO AREA END */}
         {/* PRODUCT TAB AREA START */}
         <div className="ltn__product-tab-area ltn__product-gutter pt-50 pb-30">
             <div className="container">
@@ -492,4 +453,5 @@ export default async function Home() {
     </>
   );
 }
+
 

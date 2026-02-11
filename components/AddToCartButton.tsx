@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { addToCart } from '@/lib/cart-client';
+import { Button } from '@heroui/react';
 
 interface AddToCartButtonProps {
   productId: number;
@@ -20,14 +21,16 @@ export default function AddToCartButton({ productId, productName, className }: A
 
   return (
     <>
-      <button
+      <Button
         type="button"
-        onClick={handleClick}
-        className={className ?? 'theme-btn-1 btn btn-effect-1'}
+        onPress={handleClick}
+        color="primary"
+        radius="md"
+        className={className ?? 'ui-cta'}
         aria-label={`Dodaj ${productName} u korpu`}
       >
-        <i className="fas fa-shopping-cart" /> Dodaj u korpu
-      </button>
+        <i className="fas fa-shopping-cart" style={{ marginRight: 8 }} /> Dodaj u korpu
+      </Button>
       {message ? <p className="mt-10" style={{ color: '#0f766e', fontWeight: 600 }}>{message}</p> : null}
     </>
   );

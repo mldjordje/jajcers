@@ -183,7 +183,7 @@ export default function CheckoutPage() {
               <div className="col-md-4 mb-20">
                 <button
                   type="button"
-                  className="theme-btn-1 btn btn-effect-1 w-100"
+                  className="ui-cta w-100"
                   onClick={() => (window.location.href = '/login?next=/checkout')}
                 >
                   Prijava
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
               <div className="col-md-4 mb-20">
                 <button
                   type="button"
-                  className="theme-btn-2 btn btn-effect-2 w-100"
+                  className="ui-ghost w-100"
                   onClick={() => (window.location.href = '/register')}
                 >
                   Registracija
@@ -201,7 +201,7 @@ export default function CheckoutPage() {
               <div className="col-md-4 mb-20">
                 <button
                   type="button"
-                  className="btn btn-outline-secondary w-100"
+                  className="ui-ghost w-100"
                   onClick={() => setGuestMode(true)}
                 >
                   Nastavi bez logina :(
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
 
                   <h4 className="mt-3">Nacin placanja</h4>
                   <p className="mb-2">Placanje pouzećem (gotovinom na dostavi).</p>
-                  <button type="submit" className="btn theme-btn-1 btn-effect-1 text-uppercase w-100 mt-20" disabled={isSubmitting || cartItems.length === 0}>
+                  <button type="submit" className="ui-cta w-100 mt-20" disabled={isSubmitting || cartItems.length === 0}>
                     {isSubmitting ? 'Slanje...' : 'Zavrsi narudzbinu'}
                   </button>
                 </form>

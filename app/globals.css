@@ -24,3 +24,105 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.ui-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a7f5a, #0f4c81);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 20px;
+  min-height: 46px;
+  box-shadow: 0 10px 22px rgba(15, 76, 129, 0.25);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+.ui-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(15, 76, 129, 0.3);
+  color: #fff;
+}
+
+.ui-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(15, 76, 129, 0.28);
+  border-radius: 12px;
+  background: #fff;
+  color: #0f4c81;
+  font-weight: 700;
+  padding: 12px 20px;
+  min-height: 46px;
+}
+
+.ui-ghost:hover {
+  background: #f4f8ff;
+  color: #0f4c81;
+}
+
+.home-hero {
+  padding: 72px 0 42px;
+  background:
+    radial-gradient(1200px 340px at 10% -20%, rgba(15, 76, 129, 0.14), transparent 55%),
+    radial-gradient(700px 280px at 90% 0%, rgba(26, 127, 90, 0.12), transparent 55%),
+    #f8fbff;
+}
+
+.home-hero__content {
+  max-width: 560px;
+}
+
+.home-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #1b6d4f;
+}
+
+.home-hero__title {
+  margin-top: 10px;
+  margin-bottom: 14px;
+  font-size: clamp(2rem, 4.2vw, 3.3rem);
+  line-height: 1.06;
+  color: #06243f;
+}
+
+.home-hero__subtitle {
+  color: #37556f;
+  margin-bottom: 18px;
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-hero__image-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero__image {
+  width: min(100%, 480px);
+  height: auto;
+  object-fit: contain;
+}
+
+.cart-shell {
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.cart-summary {
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+}

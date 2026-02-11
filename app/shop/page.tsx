@@ -12,7 +12,7 @@ interface Product {
 
 async function getProducts() {
   try {
-    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('products.php', {
+    const response = await fetchPhpApiJson<{ status: string; products: Product[] }>('productsLite.php?limit=180', {
       cache: 'force-cache',
       next: { revalidate: 300 },
     });

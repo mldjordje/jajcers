@@ -82,7 +82,7 @@ export async function getOrderById(orderId: number): Promise<OrderWithItems | nu
 
 export async function getAllOrders(): Promise<OrderRow[]> {
   try {
-    const response = await fetchPhpApiJson<OrdersResponse>('adminOrders.php');
+    const response = await fetchPhpApiJson<OrdersResponse>('adminOrders.php?limit=300');
     return response.status === 'success' ? response.orders ?? [] : [];
   } catch (error) {
     console.error('getAllOrders failed:', error);

@@ -3,6 +3,7 @@ import './globals.css';
 import Script from 'next/script';
 import LayoutChrome from '@/components/LayoutChrome';
 import PwaRegister from '@/components/PwaRegister';
+import HeroProvider from '@/components/HeroProvider';
 
 export const metadata: Metadata = {
   title: 'Jajce.rs - Sveža jaja, direktno sa farme na vaš sto!',
@@ -34,8 +35,10 @@ export default function RootLayout({
             </div>
         </div>
 
-        <LayoutChrome>{children}</LayoutChrome>
-        <PwaRegister />
+        <HeroProvider>
+          <LayoutChrome>{children}</LayoutChrome>
+          <PwaRegister />
+        </HeroProvider>
         
         {/* Scripts */}
         {/* We use afterInteractive to ensure they run after hydration, 
