@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Script from 'next/script';
 import LayoutChrome from '@/components/LayoutChrome';
 import PwaRegister from '@/components/PwaRegister';
 import HeroProvider from '@/components/HeroProvider';
+import LegacyScripts from '@/components/LegacyScripts';
 
 export const metadata: Metadata = {
   title: 'Jajce.rs - Sveža jaja, direktno sa farme na vaš sto!',
@@ -38,14 +38,8 @@ export default function RootLayout({
         <HeroProvider>
           <LayoutChrome>{children}</LayoutChrome>
           <PwaRegister />
+          <LegacyScripts />
         </HeroProvider>
-        
-        {/* Scripts */}
-        {/* We use afterInteractive to ensure they run after hydration, 
-            though for jQuery plugins sometimes beforeInteractive is needed if they are critical 
-            to initial render, but usually plugins.js is heavy so after is better. */}
-        <Script src="/js/plugins.js" strategy="afterInteractive" />
-        <Script src="/js/main.js" strategy="afterInteractive" />
       </body>
     </html>
   );

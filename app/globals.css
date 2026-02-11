@@ -74,6 +74,8 @@ body {
 
 .home-hero__content {
   max-width: 560px;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .home-hero__eyebrow {
@@ -125,4 +127,14 @@ body {
   border: 1px solid rgba(15, 23, 42, 0.09);
   border-radius: 16px;
   background: linear-gradient(180deg, #ffffff, #f8fbff);
+}
+
+.mini-cart-item-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.mini-cart-item-card .mini-cart-img img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }

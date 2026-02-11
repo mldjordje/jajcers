@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { CartEntry, getCartCount, getCartEntries } from '@/lib/cart-client';
+import { Button, Card, CardBody, Chip } from '@heroui/react';
+import { CartEntry, getCartCount, getCartEntries, removeCartItem } from '@/lib/cart-client';
 import { fetchProductsByIds } from '@/lib/products-client';
+import { resolveProductImage } from '@/lib/product-image';
 
 interface CartProduct {
   id: number;
@@ -46,6 +48,11 @@ export default function Header() {
       window.removeEventListener('storage', syncCart);
     };
   }, []);
+
+  const handleRemoveFromMiniCart = (productId: number) => {
+    removeCartItem(productId);
+    setCartEntries(getCartEntries());
+  };
 
   useEffect(() => {
     const ids = cartEntries.map((item) => item.product_id);
@@ -198,21 +205,38 @@ export default function Header() {
                 const product = cartProducts.find((p) => p.id === entry.product_id);
                 if (!product) return null;
                 return (
-                  <div className="mini-cart-item clearfix" key={entry.product_id}>
-                    <div className="mini-cart-img">
-                      <Link href={`/product/${entry.product_id}`}>
-                        <img src={product.main_image} alt={product.name} />
-                      </Link>
-                    </div>
-                    <div className="mini-cart-info">
-                      <h6>
-                        <Link href={`/product/${entry.product_id}`}>{product.name}</Link>
-                      </h6>
-                      <span className="mini-cart-quantity">
-                        {entry.quantity} x {Number(product.price_per_piece).toFixed(2)} RSD
-                      </span>
-                    </div>
-                  </div>
+                  <Card key={entry.product_id} className="mini-cart-item-card mb-10">
+                    <CardBody className="d-flex flex-row align-items-center justify-content-between gap-2 p-10">
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="mini-cart-img">
+                          <Link href={`/product/${entry.product_id}`}>
+                            <img
+                              src={resolveProductImage(product.name, product.main_image)}
+                              alt={product.name}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </Link>
+                        </div>
+                        <div className="mini-cart-info">
+                          <h6 className="mb-1">
+                            <Link href={`/product/${entry.product_id}`}>{product.name}</Link>
+                          </h6>
+                          <Chip size="sm" variant="flat" color="primary">
+                            {entry.quantity} x {Number(product.price_per_piece).toFixed(2)} RSD
+                          </Chip>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        color="danger"
+                        variant="light"
+                        onPress={() => handleRemoveFromMiniCart(entry.product_id)}
+                      >
+                        Ukloni
+                      </Button>
+                    </CardBody>
+                  </Card>
                 );
               })
             )}
@@ -224,12 +248,12 @@ export default function Header() {
               </h5>
             </div>
             <div className="btn-wrapper">
-              <Link href="/cart" className="theme-btn-1 btn btn-effect-1">
+              <Button as={Link} href="/cart" color="primary" className="ui-cta">
                 Korpa
-              </Link>
-              <Link href="/checkout" className="theme-btn-2 btn btn-effect-2">
+              </Button>
+              <Button as={Link} href="/checkout" variant="bordered" className="ui-ghost">
                 Placanje
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

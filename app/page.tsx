@@ -100,7 +100,12 @@ export default async function Home() {
                                     <div className="ltn__product-item ltn__product-item-3 text-center">
                                         <div className="product-img">
                                             <Link href={`/product/${product.id}`}>
-                                                <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
+                                                <img
+                                                  src={resolveProductImage(product.name, product.main_image)}
+                                                  alt={product.name}
+                                                  loading="lazy"
+                                                  decoding="async"
+                                                />
                                             </Link>
                                             <div className="product-hover-action">
                                                 <ul>
@@ -236,7 +241,13 @@ export default async function Home() {
                                 <div className="ltn__category-item-img">
                                     <Link href={`/product/${prod.id}`}>
                                         {prod.main_image ? (
-                                            <img style={{ width: "200px", height: "200px", objectFit: "contain" }} src={resolveProductImage(prod.name, prod.main_image)} alt="Product Image" />
+                                            <img
+                                              style={{ width: "200px", height: "200px", objectFit: "contain" }}
+                                              src={resolveProductImage(prod.name, prod.main_image)}
+                                              alt="Product Image"
+                                              loading="lazy"
+                                              decoding="async"
+                                            />
                                         ) : (
                                             <img src="/img/no-image.jpg" alt="No Image" />
                                         )}

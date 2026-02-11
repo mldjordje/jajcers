@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { addToCart } from '@/lib/cart-client';
+import { Button } from '@heroui/react';
 
 export default function AddToCart({ product }: { product: { id: number; name: string } }) {
   const [qty, setQty] = useState(1);
@@ -31,10 +32,10 @@ export default function AddToCart({ product }: { product: { id: number; name: st
           </div>
         </li>
         <li>
-          <button type="button" onClick={handleAdd} className="theme-btn-1 btn btn-effect-1" title="Add to Cart">
+          <Button type="button" onPress={handleAdd} color="primary" className="ui-cta" title="Add to Cart">
             <i className="fas fa-shopping-cart" />
             <span>Dodaj u korpu</span>
-          </button>
+          </Button>
         </li>
       </ul>
       {msg ? <p style={{ color: 'green', fontWeight: 'bold', marginTop: '10px' }}>{msg}</p> : null}

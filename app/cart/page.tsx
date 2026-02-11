@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getCartEntries, removeCartItem, updateCartQuantity } from '@/lib/cart-client';
 import { fetchProductsByIds } from '@/lib/products-client';
 import { Button, Card, CardBody } from '@heroui/react';
+import { resolveProductImage } from '@/lib/product-image';
 
 interface CartItem {
   product_id: number;
@@ -39,7 +40,7 @@ export default function CartPage() {
             ...item,
             name: product.name,
             price: product.price_per_piece,
-            image: product.main_image,
+            image: resolveProductImage(product.name, product.main_image),
             subtotal: product.price_per_piece * item.quantity,
           };
         })
@@ -112,13 +113,19 @@ export default function CartPage() {
                         cartItems.map((item) => (
                           <tr key={item.product_id}>
                             <td className="cart-product-remove">
-                              <button type="button" className="ui-ghost" onClick={() => removeItem(item.product_id)}>
-                                x
-                              </button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                color="danger"
+                                variant="light"
+                                onPress={() => removeItem(item.product_id)}
+                              >
+                                Ukloni
+                              </Button>
                             </td>
                             <td className="cart-product-image">
                               <Link href={`/product/${item.product_id}`}>
-                                <img src={item.image} alt={item.name} />
+                                <img src={item.image} alt={item.name} loading="lazy" decoding="async" />
                               </Link>
                             </td>
                             <td className="cart-product-info">
@@ -129,19 +136,21 @@ export default function CartPage() {
                             <td className="cart-product-price">{Number(item.price).toFixed(2)} RSD</td>
                             <td className="cart-product-quantity">
                               <div className="cart-plus-minus">
-                                <div
-                                  className="dec qtybutton"
-                                  onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
+                                <Button
+                                  size="sm"
+                                  variant="flat"
+                                  onPress={() => updateQuantity(item.product_id, item.quantity - 1)}
                                 >
                                   -
-                                </div>
+                                </Button>
                                 <input type="text" value={item.quantity} className="cart-plus-minus-box" readOnly />
-                                <div
-                                  className="inc qtybutton"
-                                  onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
+                                <Button
+                                  size="sm"
+                                  variant="flat"
+                                  onPress={() => updateQuantity(item.product_id, item.quantity + 1)}
                                 >
                                   +
-                                </div>
+                                </Button>
                               </div>
                             </td>
                             <td className="cart-product-subtotal">{Number(item.subtotal).toFixed(2)} RSD</td>

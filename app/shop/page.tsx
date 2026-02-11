@@ -40,7 +40,12 @@ export default async function Shop() {
                                         <div className="ltn__product-item ltn__product-item-3 text-center">
                                             <div className="product-img">
                                                 <Link href={`/product/${product.id}`}>
-                                                    <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
+                                                    <img
+                                                      src={resolveProductImage(product.name, product.main_image)}
+                                                      alt={product.name}
+                                                      loading="lazy"
+                                                      decoding="async"
+                                                    />
                                                 </Link>
                                                 <div className="product-hover-action">
                                                     <ul>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { clearCart, getCartEntries } from '@/lib/cart-client';
 import { fetchProductsByIds } from '@/lib/products-client';
+import { Button, Card, CardBody } from '@heroui/react';
 
 interface CartItem {
   product_id: number;
@@ -181,31 +182,19 @@ export default function CheckoutPage() {
             </div>
             <div className="row mt-30">
               <div className="col-md-4 mb-20">
-                <button
-                  type="button"
-                  className="ui-cta w-100"
-                  onClick={() => (window.location.href = '/login?next=/checkout')}
-                >
+                <Button type="button" color="primary" className="ui-cta w-100" onPress={() => (window.location.href = '/login?next=/checkout')}>
                   Prijava
-                </button>
+                </Button>
               </div>
               <div className="col-md-4 mb-20">
-                <button
-                  type="button"
-                  className="ui-ghost w-100"
-                  onClick={() => (window.location.href = '/register')}
-                >
+                <Button type="button" variant="bordered" className="ui-ghost w-100" onPress={() => (window.location.href = '/register')}>
                   Registracija
-                </button>
+                </Button>
               </div>
               <div className="col-md-4 mb-20">
-                <button
-                  type="button"
-                  className="ui-ghost w-100"
-                  onClick={() => setGuestMode(true)}
-                >
+                <Button type="button" variant="bordered" className="ui-ghost w-100" onPress={() => setGuestMode(true)}>
                   Nastavi bez logina :(
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -276,16 +265,17 @@ export default function CheckoutPage() {
 
                   <h4 className="mt-3">Nacin placanja</h4>
                   <p className="mb-2">Placanje pouzećem (gotovinom na dostavi).</p>
-                  <button type="submit" className="ui-cta w-100 mt-20" disabled={isSubmitting || cartItems.length === 0}>
+                  <Button type="submit" color="primary" className="ui-cta w-100 mt-20" isDisabled={isSubmitting || cartItems.length === 0}>
                     {isSubmitting ? 'Slanje...' : 'Zavrsi narudzbinu'}
-                  </button>
+                  </Button>
                 </form>
               </div>
             </div>
           </div>
 
           <div className="col-lg-6">
-            <div className="shoping-cart-total mt-50">
+            <Card className="shoping-cart-total mt-50 cart-summary">
+              <CardBody>
               <h4 className="title-2">Vasa korpa</h4>
               <table className="table">
                 <tbody>
@@ -315,7 +305,8 @@ export default function CheckoutPage() {
                   </tr>
                 </tbody>
               </table>
-            </div>
+              </CardBody>
+            </Card>
           </div>
         </div>
       </div>

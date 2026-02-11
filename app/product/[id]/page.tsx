@@ -55,7 +55,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                 {product.main_image && (
                                     <div className="single-large-img">
                                         <a href={resolveProductImage(product.name, product.main_image)} data-rel="lightcase:myCollection">
-                                            <img src={resolveProductImage(product.name, product.main_image)} alt={product.name} />
+                                            <img
+                                              src={resolveProductImage(product.name, product.main_image)}
+                                              alt={product.name}
+                                              loading="lazy"
+                                              decoding="async"
+                                            />
                                         </a>
                                     </div>
                                 )}
@@ -72,7 +77,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                              <div className="ltn__shop-details-small-img slick-arrow-2">
                                 {product.main_image && (
                                     <div className="single-small-img">
-                                         <img src={resolveProductImage(product.name, product.main_image)} alt="Thumb Main" />
+                                         <img
+                                           src={resolveProductImage(product.name, product.main_image)}
+                                           alt="Thumb Main"
+                                           loading="lazy"
+                                           decoding="async"
+                                         />
                                     </div>
                                 )}
                                 {extraImages.map((img, idx) => (
